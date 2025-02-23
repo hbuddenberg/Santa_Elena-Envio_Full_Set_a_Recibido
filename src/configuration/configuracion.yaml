@@ -1,0 +1,16 @@
+ruta: "D:/Dev/Santa_Helena-Subida_Archivos_a_Agente_Aduana/test/resources"
+mapeo: "src/configuration/tabula-INSTRUCTIVO.json"
+api:
+    url: "https://api-dev.insacom.cl/expo-carlo/cargar-instructivo"
+    key: "4f897cde-7d5c-4336-99c9-f31c84c2b9f8"
+correo:
+    template: "src/templates/Envio_Informe.html"
+    envio:
+        destinatarios: "h.buddenberg@gmail.com"
+        copia: "h.buddenberg@gmail.com"
+        oculta: "goliverz1995@gmail.com"
+    configuracion:
+        gmail_user: "exportaciones@gmail.com"
+        gmail_password: "Exp*.2020"
+        smtp_server: "smtp.gmail.com"
+        smtp_port: 587
