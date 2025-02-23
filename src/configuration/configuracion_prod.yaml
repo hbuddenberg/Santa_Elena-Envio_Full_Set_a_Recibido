@@ -1,0 +1,16 @@
+ruta: "G:/Mi unidad/Bot RPA/COMEX/Subida de archivos a agente de aduanas"
+mapeo: "src/configuration/tabula-INSTRUCTIVO.json"
+api:
+    url: "https://api.insacom.cl/expo-carlo/cargar-instructivo"
+    key: "i39iOwU9xEtEKr3z2br6Ha3rW4KqEQ7R"
+correo:
+    template: "src/templates/Envio_Informe.html"
+    envio:
+        destinatarios: "comex@santaelena.com,comex2@santaelena.com,comexasistente@santaelena.com"
+        copia: ""
+        oculta: "h.buddenberg@gmail.com,goliverz1995@gmail.com"
+    configuracion:
+        gmail_user: "jua.cuadra.v@gmail.com"
+        gmail_password: "aelr kzut fcna ebnn"
+        smtp_server: "smtp.gmail.com"
+        smtp_port: 587
