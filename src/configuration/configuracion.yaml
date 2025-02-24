@@ -1,16 +1,36 @@
-ruta: "D:/Dev/Santa_Helena-Subida_Archivos_a_Agente_Aduana/test/resources"
-mapeo: "src/configuration/tabula-INSTRUCTIVO.json"
-api:
-    url: "https://api-dev.insacom.cl/expo-carlo/cargar-instructivo"
-    key: "4f897cde-7d5c-4336-99c9-f31c84c2b9f8"
-correo:
-    template: "src/templates/Envio_Informe.html"
-    envio:
-        destinatarios: "h.buddenberg@gmail.com"
-        copia: "h.buddenberg@gmail.com"
-        oculta: "goliverz1995@gmail.com"
-    configuracion:
-        gmail_user: "exportaciones@gmail.com"
-        gmail_password: "Exp*.2020"
-        smtp_server: "smtp.gmail.com"
-        smtp_port: 587
+# Rutas
+path:
+  local:
+    main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido"
+    source: "${path.local.main}/src"
+    config: "${path.local.source}/configuracion"
+    modules: "${path.local.source}/modules"
+    models: "${path.local.source}/models"
+    templates: "${path.local.source}/templates"
+    logs: "${path.local.main}/logs"
+  shared:
+    main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test"
+    config: "${path.shared.main}/Configuracion/Plantilla_de_Configuracion.xlsx"
+    in_progress: "${path.shared.main}/En Proceso"
+    done: "${path.shared.main}/Finalizados"
+
+# Correo
+mail:
+  config:
+    smtp:
+      user: "jua.cuadra.v@gmail.com"
+      password: "aelr kzut fcna ebnn"
+      server: "smtp.gmail.com"
+      port: 587
+    api:
+      scopes: ['https://www.googleapis.com/auth/gmail.send']
+      credentials: "${path.local.config}/credentials.json"
+      token: "${path.local.config}/token.json"
+  template:
+    report: "${path.local.templates}/Envio_Informe.html"
+    receiver: "${path.local.templates}/Envio_Recibidor.html"
+  sender:
+    report:
+      to: ""
+      cc: "h.buddenberg@gmail.com"
+      cco: "goliverz1995@gmail.com"

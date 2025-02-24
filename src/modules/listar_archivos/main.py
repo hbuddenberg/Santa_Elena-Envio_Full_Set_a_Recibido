@@ -6,12 +6,11 @@ def listar_archivos(ruta):
     for dir in os.listdir(ruta):
         dir_path = os.path.join(ruta, dir)
         if os.path.isdir(dir_path):
-            archivos_dict[dir] = {'instructivo': None, 'booking': None}
+            archivos_dict[dir] = []
             for file in os.listdir(dir_path):
-                if file.upper().startswith('INSTRUCTIVO'):
-                    archivos_dict[dir]['instructivo'] = file
-                elif file.upper().startswith('BOOKING'):
-                    archivos_dict[dir]['booking'] = file
+                file_path = os.path.join(dir_path, file)
+                if os.path.isfile(file_path):
+                    archivos_dict[dir].append(file)
     
     return archivos_dict
 

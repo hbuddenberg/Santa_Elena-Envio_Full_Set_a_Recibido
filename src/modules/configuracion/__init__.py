@@ -1,7 +1,3 @@
-# Archivo de inicialización del módulo buscar_carpeta
-try:
-	from .main import Configuracion
-except ImportError:
-	raise ImportError("No se ha podido resolver la importación '.buscar'. Asegúrese de que el archivo 'buscar.py' existe en el directorio 'buscar_carpeta'.")
+from .main import Configuracion
 
-__all__ = ['main']
+__all__ = ['Configuracion']
