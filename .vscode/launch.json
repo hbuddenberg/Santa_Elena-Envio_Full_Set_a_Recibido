@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Python File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/modules/configuracion/main.py",
+            "cwd": "${workspaceFolder}/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
+            "console": "integratedTerminal",
+            "args": ["src/configuration/configuracion.yaml"]
+        }
+    ]
+}

@@ -25,7 +25,7 @@ def listar_carpetas(ruta):
     carpetas = [nombre for nombre in os.listdir(ruta) if os.path.isdir(os.path.join(ruta, nombre))]
     logging.info(f"Carpetas listadas en la ruta {ruta}: {carpetas}")
     return carpetas
-def buscar(ruta):
+def buscar_carpeta(ruta):
     logging.info(f"Ruta proporcionada: {ruta}")
     if buscar_existencia(ruta):
         carpetas = listar_carpetas(ruta)
