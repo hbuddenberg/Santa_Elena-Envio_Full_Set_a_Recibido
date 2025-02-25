@@ -1,3 +1,3 @@
-from .main import mover, mover_todo
+from .main import eliminar_carpetas, mover, mover_todo
 
-__all__ = ['mover', 'mover_todo']
+__all__ = ['eliminar_carpetas', 'mover', 'mover_todo']

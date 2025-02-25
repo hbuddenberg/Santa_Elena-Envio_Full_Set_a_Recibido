@@ -1,8 +1,9 @@
 from modules.configuracion import Configuracion as Configuracion_Yaml
 from modules.extraer_excel import Configuracion as Configuracion_Excel
 from modules.buscar_carpeta import buscar_carpeta
-from modules.mover_carpeta import mover, mover_todo
+from modules.mover_carpeta import eliminar_carpetas, mover, mover_todo
 from modules.listar_archivos import listar_archivos
+from modules.estructurar_registro import estructurar
 
 from pprint import pp 
 
@@ -21,16 +22,17 @@ def mover_carpetas_enproceso(ruta):
     print(f"Carpetas : {lista_carpetas}")
     if len(lista_carpetas) > 0:
         print("Se encontraron carpetas en la ruta.")
+        eliminar_carpetas(ruta)
         mover_carpetas = mover(ruta, lista_carpetas)
         if mover_carpetas:
             print("Carpetas movidas correctamente.")
-            archivos = listar_archivos(f'{ruta}/En Proceso')
+            carpetas = listar_archivos(f'{ruta}/En Proceso')
         else:
             print("Error al mover las carpetas.")
-    if archivos == None:
+    if carpetas == None or len(carpetas) == 0:
         registros = None
     else:
-        registros = {'ruta': {'raiz': ruta, 'en_proceso': f'{ruta}/En Proceso'}, 'carpetas': archivos}
+        registros = {'ruta': {'raiz': ruta, 'en_proceso': f'{ruta}/En Proceso'}, 'carpetas': carpetas}
     return registros
 
 def listar_carpetas(registros: dict):
@@ -49,12 +51,19 @@ def listar_carpetas(registros: dict):
 
     return ruta, carpetas
 
+def registros(carpetas: dict):
+    lista_ejecucion = []
+    for folder, files in carpetas['carpetas'].items():
+        ruta = f"{carpetas['ruta']['En Progreso']}/{folder}"
+        estructura = estructurar(folder, CONFIG_EXCEL)
+    
+    return lista_ejecucion
+
 def ejecutar():
     carpetas = mover_carpetas_enproceso(CONFIG_GLOBAL.config.path.shared.main)
     if carpetas != None:
-        ruta, carpetas = listar_carpetas(carpetas)
-        lista_ejecucion = []
-        #for key, dict in carpetas.items():
+        if len(carpetas['carpetas']) > 0:
+            ejecucion = registros(carpetas)
 
 def main():
     ejecutar()

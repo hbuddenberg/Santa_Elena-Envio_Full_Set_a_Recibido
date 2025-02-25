@@ -16,6 +16,21 @@ def validar_ruta(ruta):
         logging.error(f"La ruta {ruta} no es un directorio.")
         raise NotADirectoryError(f"La ruta {ruta} no es un directorio.")
     logging.info(f"Ruta {ruta} validada correctamente.")
+
+def eliminar_carpetas(ruta):
+    destino_base = os.path.join(ruta, 'En Proceso')
+    if os.path.exists(destino_base):
+        for item in os.listdir(destino_base):
+            item_path = os.path.join(destino_base, item)
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+                logging.info(f"Carpeta {item_path} eliminada.")
+            else:
+                os.remove(item_path)
+                logging.info(f"Archivo {item_path} eliminado.")
+    else:
+        logging.info(f"La carpeta {destino_base} no existe.")
+
 def mover_carpetas(ruta, lista_carpeta):
     """
     Mueve las carpetas especificadas en lista_carpeta a la ruta destino.
