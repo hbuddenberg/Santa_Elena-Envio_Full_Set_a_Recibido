@@ -4,6 +4,7 @@ from modules.buscar_carpeta import buscar_carpeta
 from modules.mover_carpeta import eliminar_carpetas, mover, mover_todo
 from modules.listar_archivos import listar_archivos
 from modules.estructurar_registro import estructurar
+from modules.email_sender import enviar_reciver
 
 from pprint import pp 
 
@@ -12,6 +13,7 @@ CONFIG_EXCEL  = Configuracion_Excel(CONFIG_GLOBAL.config.path.shared.config)
 
 def mover_carpetas_enproceso(ruta):
     archivos = None
+    carpetas = None
     lista_carpetas = buscar_carpeta(ruta)
     if 'Configuracion' in lista_carpetas:
         lista_carpetas.remove('Configuracion')
@@ -56,7 +58,8 @@ def registros(carpetas: dict):
     for folder, files in carpetas['carpetas'].items():
         ruta = f"{carpetas['ruta']['en_proceso']}/{folder}"
         estructura = estructurar(folder, files, CONFIG_EXCEL)
-    
+        enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
+        break
     return lista_ejecucion
 
 def ejecutar():
