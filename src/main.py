@@ -54,8 +54,8 @@ def listar_carpetas(registros: dict):
 def registros(carpetas: dict):
     lista_ejecucion = []
     for folder, files in carpetas['carpetas'].items():
-        ruta = f"{carpetas['ruta']['En Progreso']}/{folder}"
-        estructura = estructurar(folder, CONFIG_EXCEL)
+        ruta = f"{carpetas['ruta']['en_proceso']}/{folder}"
+        estructura = estructurar(folder, files, CONFIG_EXCEL)
     
     return lista_ejecucion
 

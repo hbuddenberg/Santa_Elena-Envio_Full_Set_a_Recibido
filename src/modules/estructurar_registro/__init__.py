@@ -1,3 +1,3 @@
-from .main import listar_archivos
+from .main import estructurar
 
-__all__ = ['listar_archivos']
+__all__ = ['estructurar']
