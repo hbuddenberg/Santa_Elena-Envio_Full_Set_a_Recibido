@@ -1,3 +1,3 @@
-from .email_sender import enviar_correo
+from .email_reciver import enviar_reciver
 
-__all__ = ['enviar_correo']
+__all__ = ['enviar_reciver']

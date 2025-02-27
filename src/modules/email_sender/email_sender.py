@@ -64,7 +64,7 @@ def enviar_correo(configuracion, archivo_informe, ordenes_embarque, tipo='api'):
     else:
         envio_correo_smtp(configuracion['configuracion'], destinatarios, asunto, cuerpo_html, [archivo_informe], copia, oculto)
 
-def enviar_correo_api(destinatarios, asunto, cuerpo_html, archivos_adjuntos=None,  cc=None, bcc=None):
+def enviar_correo_api(configuracion, destinatarios, asunto, cuerpo_html, archivos_adjuntos=None,  cc=None, bcc=None):
     """
     Envía un correo utilizando la API de Gmail con OAuth 2.0.
 
@@ -149,7 +149,7 @@ def enviar_correo_api(destinatarios, asunto, cuerpo_html, archivos_adjuntos=None
         return False
 
 
-def envio_correo_smtp(configuracion, destinatarios, asunto, cuerpo_html, archivos_adjuntos=None, cc=None, bcc=None):
+def envio_correo_smtp(config_global, configuracion, destinatarios, asunto, cuerpo_html, archivos_adjuntos=None, cc=None, bcc=None):
     """
     Envía un correo usando Gmail.
 
