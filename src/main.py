@@ -5,6 +5,9 @@ from modules.mover_carpeta import eliminar_carpetas, mover, mover_todo
 from modules.listar_archivos import listar_archivos
 from modules.estructurar_registro import estructurar
 from modules.email_sender import enviar_reciver
+from modules.informe import genera_informe
+from datetime import datetime
+
 
 from pprint import pp 
 
@@ -53,13 +56,39 @@ def listar_carpetas(registros: dict):
 
     return ruta, carpetas
 
+def generacion_informe(registros, ruta):
+    # Generar nombre del archivo con la fecha y hora actual
+    nombre_archivo = f"Informe_Envio_Recibidor_{datetime.now().strftime('%Y-%m-%d_%H.%M.%S')}.xlsx"
+    for registro in registros:
+        archivo_informe = genera_informe(registro, ruta, nombre_archivo)
+    return archivo_informe
+
 def registros(carpetas: dict):
     lista_ejecucion = []
+    print("--------------------------------------------")
     for folder, files in carpetas['carpetas'].items():
+        print(f"Ejecutando: {folder}")
+        print(f"Archivos : {files}")
         ruta = f"{carpetas['ruta']['en_proceso']}/{folder}"
         estructura = estructurar(folder, files, CONFIG_EXCEL)
-        enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
-        break
+        status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
+        lista_ejecucion.append({
+            'carpeta': folder,
+            'ruta': ruta,
+            'archivos': files,
+            'estructura': estructura.to_dict(),
+            'estado_correo': status
+        })
+        print("--------------------------------------------")
+    
+    with open('lista_ejecucion.txt', 'w') as file:
+            file.write(str(lista_ejecucion))
+    
+    if len(lista_ejecucion) > 0:
+        archivo_informe = generacion_informe(lista_ejecucion, carpetas['ruta']['en_proceso'])
+        #enviar_correo(configuracion.correo, archivo_informe, lista_ejecucion, 'api')
+        #mover_todo(configuracion.ruta)
+        
     return lista_ejecucion
 
 def ejecutar():
