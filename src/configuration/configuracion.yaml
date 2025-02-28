@@ -29,8 +29,9 @@ mail:
   template:
     report: "${path.local.templates}/Envio_Informe.html"
     receiver: "${path.local.templates}/Envio_Recibidor.html"
+    empty: "${path.local.templates}/Envio_Vacio.html"
   sender:
     report:
       to: ""
       cc: "h.buddenberg@gmail.com"
-      cco: "h.buddenberg@gmail.com"
+      cco: "goliverz1995@gmail.com"

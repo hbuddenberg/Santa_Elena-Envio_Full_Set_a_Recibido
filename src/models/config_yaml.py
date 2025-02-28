@@ -37,6 +37,7 @@ class APIConfig(BaseModel):
 class MailTemplateConfig(BaseModel):
     report: str
     receiver: str
+    empty: str
 
 class MailSenderReportConfig(BaseModel):
     to: str
