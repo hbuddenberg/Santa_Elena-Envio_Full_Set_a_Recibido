@@ -4,7 +4,7 @@ from modules.buscar_carpeta import buscar_carpeta
 from modules.mover_carpeta import eliminar_carpetas, mover, mover_todo
 from modules.listar_archivos import listar_archivos
 from modules.estructurar_registro import estructurar
-from modules.email_sender import enviar_reciver
+from modules.email_sender import enviar_reciver, enviar_informe, enviar_vacio
 from modules.informe import genera_informe
 from datetime import datetime
 
@@ -81,13 +81,13 @@ def registros(carpetas: dict):
         })
         print("--------------------------------------------")
     
-    with open('lista_ejecucion.txt', 'w') as file:
-            file.write(str(lista_ejecucion))
-    
+    #with open('lista_ejecucion.txt', 'w') as file:
+    #        file.write(str(lista_ejecucion))
+        
     if len(lista_ejecucion) > 0:
         archivo_informe = generacion_informe(lista_ejecucion, carpetas['ruta']['en_proceso'])
-        #enviar_correo(configuracion.correo, archivo_informe, lista_ejecucion, 'api')
-        #mover_todo(configuracion.ruta)
+        enviar_informe(CONFIG_GLOBAL, CONFIG_EXCEL, archivo_informe, lista_ejecucion, 'api')
+        mover_todo(CONFIG_GLOBAL.config.path.shared.main)
         
     return lista_ejecucion
 
@@ -95,7 +95,11 @@ def ejecutar():
     carpetas = mover_carpetas_enproceso(CONFIG_GLOBAL.config.path.shared.main)
     if carpetas != None:
         if len(carpetas['carpetas']) > 0:
-            ejecucion = registros(carpetas)
+            registros(carpetas)
+        else:
+            enviar_vacio(CONFIG_GLOBAL, CONFIG_EXCEL, 'api')
+    else:
+        enviar_vacio(CONFIG_GLOBAL, CONFIG_EXCEL, 'api')
 
 def main():
     ejecutar()

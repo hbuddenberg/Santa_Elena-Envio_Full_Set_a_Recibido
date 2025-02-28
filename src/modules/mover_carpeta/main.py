@@ -76,6 +76,8 @@ def mover_todo(ruta):
                 logging.info(f"Elemento {item} movido a {destino}.")
             else:
                 logging.warning(f"El elemento {item} no existe en la ruta {destino_base}.")
+        
+        print(f"Elementos movidos correctamente a la carpeta {destino_final}.")
 
 def main(ruta, lista_carpeta):
     """
