@@ -18,9 +18,12 @@ def enviar_reciver(configuracion, ruta, files, estructura, tipo='api'):
     oculto = [email.strip() for email in configuracion.config.mail.sender.report.cco.replace(';', ',').split(',')]
 
     if tipo == 'api':
-        enviar_correo_api(configuracion, destinatarios, estructura.asunto, cuerpo_html, archivos, copia, oculto)
+        status = enviar_correo_api(configuracion, destinatarios, estructura.asunto, cuerpo_html, archivos, copia, oculto)
     else:
-        envio_correo_smtp(configuracion, configuracion.config.mail.config.smtp, destinatarios, estructura.asunto, cuerpo_html, archivos, copia, oculto)
+        status = envio_correo_smtp(configuracion, configuracion.config.mail.config.smtp, destinatarios, estructura.asunto, cuerpo_html, archivos, copia, oculto)
+
+    return status
+
 '''
 import sys
 import os

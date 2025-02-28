@@ -42,28 +42,6 @@ def autenticar():
 
     return creds
 
-def enviar_correo(configuracion, archivo_informe, ordenes_embarque, tipo='api'):
-    if tipo not in ['smtp', 'api']:
-        raise ValueError("El tipo de envío debe ser 'smtp' o 'api'.")
-
-    ordenes_embarque = [f"<li>{orden.diccionario['Orden_Embarque']}</li>" for orden in ordenes_embarque]
-
-    asunto = f'Informe de ejecucion Carga de Instructivos de Ordenes de Embarque - {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
-
-    with open(configuracion['template'], 'r') as file:
-        cuerpo_html = file.read()
-
-    cuerpo_html = str(cuerpo_html).replace('{Ordenes_Embarque}', ''.join(ordenes_embarque))
-
-    destinatarios = [email.strip() for email in configuracion['envio']['destinatarios'].replace(';', ',').split(',')]
-    copia = [email.strip() for email in configuracion['envio']['copia'].replace(';', ',').split(',')]
-    oculto = [email.strip() for email in configuracion['envio']['oculta'].replace(';', ',').split(',')]
-
-    if tipo == 'api':
-        enviar_correo_api(destinatarios, asunto, cuerpo_html, [archivo_informe], copia, oculto)
-    else:
-        envio_correo_smtp(configuracion['configuracion'], destinatarios, asunto, cuerpo_html, [archivo_informe], copia, oculto)
-
 def enviar_correo_api(configuracion, destinatarios, asunto, cuerpo_html, archivos_adjuntos=None,  cc=None, bcc=None):
     """
     Envía un correo utilizando la API de Gmail con OAuth 2.0.
@@ -83,7 +61,7 @@ def enviar_correo_api(configuracion, destinatarios, asunto, cuerpo_html, archivo
         service = build('gmail', 'v1', credentials=creds)
         message = MIMEMultipart()
 
-       # Validación y asignación de destinatarios
+        # Validación y asignación de destinatarios
         if destinatarios and isinstance(destinatarios, list):
             message['To'] = ", ".join(destinatarios)
         else:
@@ -130,23 +108,35 @@ def enviar_correo_api(configuracion, destinatarios, asunto, cuerpo_html, archivo
                         'Content-Disposition',
                         f'attachment; filename="{nombre_archivo}"'
                     )
-                    message.attach(mime_base)
+                    try:
+                        message.attach(mime_base)
+                        print(f"Archivo {os.path.basename(archivo_normalizado)} adjuntado correctamente.")
+                    except Exception as e:
+                        raise ValueError(f"Error al adjuntar el archivo {os.path.basename(archivo_normalizado)}: {e}")
 
 
         # Construir y enviar el mensaje
         raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
         send_message = {'raw': raw_message}
 
-        service.users().messages().send(userId="me", body=send_message).execute()
-        print("Correo enviado correctamente.")
-        return True
+        send = service.users().messages().send(userId="me", body=send_message).execute()
+        if send['labelIds'][0] == 'SENT':
+            descripcion = "Correo enviado correctamente."
+            print(descripcion)
+            return { 'estado': True, 'descripcion': descripcion }
+        else:
+            descripcion = f"El correo no pudo ser enviado."
+            print(descripcion)
+            return { 'estado': False, 'descripcion': descripcion }
 
     except HttpError as error:
-        print(f"Un error ocurrió: {error}")
-        return False
+        descripcion = f"Un error ocurrió: {error}"
+        print(descripcion)
+        return { 'estado': False, 'descripcion': descripcion }
     except Exception as e:
-        print(f"Ocurrió un error inesperado: {e}")
-        return False
+        descripcion = f"Ocurrió un error inesperado: {e}"
+        print(descripcion)
+        return { 'estado': False, 'descripcion': descripcion }
 
 
 def envio_correo_smtp(config_global, configuracion, destinatarios, asunto, cuerpo_html, archivos_adjuntos=None, cc=None, bcc=None):
@@ -201,17 +191,11 @@ def envio_correo_smtp(config_global, configuracion, destinatarios, asunto, cuerp
             server.login(GMAIL_USER, GMAIL_PASSWORD)
             #server.sendmail(GMAIL_USER, destinatarios , msg.as_string())
             server.sendmail(GMAIL_USER, destinatarios + (cc or []) + (bcc or []), msg.as_string())
-            return True
+            descripcion = "Correo enviado correctamente."
+            print(descripcion)
+            return { 'estado': True, 'descripcion': descripcion }
 
     except Exception as e:
-        print(f"Error al enviar el correo: {e}")
-        return False
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    configuracion = {'template': 'src/templates/Envio_Informe.html', 'envio': {'destinatarios': 'h.buddenberg@gmail.com', 'copia': 'hans.buddenberg@smart-bot.cl', 'oculta': 'hans.buddenberg@smart-bot.cl'}, 'configuracion': {'gmail_user': 'jua.cuadra.v@gmail.com', 'gmail_password': 'aelr kzut fcna ebnn', 'smtp_server': 'smtp.gmail.com', 'smtp_port': 587}}
-    archivo_informe = '/Volumes/Resources/Development/SmartBots/Santa_Helena-Subida_Archivos_a_Agente_Aduana/test/resources/En Proceso/Informe_Carga_Intructivo_2025-02-03_23.59.53.xlsx'
-    ordenes_embarque = ['OE232400030', 'OE232400045']
-    enviar_correo(configuracion, archivo_informe, ordenes_embarque)
+        descripcion = f"Error al enviar el correo: {e}"
+        print(descripcion)
+        return { 'estado': False, 'descripcion': descripcion }
