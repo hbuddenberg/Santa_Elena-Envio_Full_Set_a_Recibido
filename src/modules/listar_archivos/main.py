@@ -2,6 +2,7 @@ import os
 
 def listar_archivos(ruta):
     archivos_dict = {}
+    archivos_ignorados = ['desktop.ini', '.DS_Store']
     
     for dir in os.listdir(ruta):
         dir_path = os.path.join(ruta, dir)
@@ -10,7 +11,10 @@ def listar_archivos(ruta):
             for file in os.listdir(dir_path):
                 file_path = os.path.join(dir_path, file)
                 if os.path.isfile(file_path):
-                    archivos_dict[dir].append(file)
+                    if file in archivos_ignorados:
+                        os.remove(file_path)
+                    else:
+                        archivos_dict[dir].append(file)
     
     return archivos_dict
 
