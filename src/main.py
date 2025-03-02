@@ -6,6 +6,7 @@ from modules.listar_archivos import listar_archivos
 from modules.estructurar_registro import estructurar
 from modules.email_sender import enviar_reciver, enviar_informe, enviar_vacio
 from modules.informe import genera_informe
+from modules.compresor import validar_archivos
 from datetime import datetime
 
 
@@ -70,8 +71,13 @@ def registros(carpetas: dict):
         print(f"Ejecutando: {folder}")
         print(f"Archivos : {files}")
         ruta = f"{carpetas['ruta']['en_proceso']}/{folder}"
+        files, tamaño_total = validar_archivos(files, ruta, folder)
         estructura = estructurar(folder, files, CONFIG_EXCEL)
-        status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
+        if tamaño_total < 1:
+            status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
+        else:
+            status = {'estado': False, 'descripcion': f'Archivos mayores a 25MB, tamaño total {tamaño_total} MB'}
+        print(f"Estado Correo : {status}")
         lista_ejecucion.append({
             'carpeta': folder,
             'ruta': ruta,
