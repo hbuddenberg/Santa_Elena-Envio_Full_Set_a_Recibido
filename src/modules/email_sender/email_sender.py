@@ -11,6 +11,7 @@ from googleapiclient.errors import HttpError
 from email.mime.base import MIMEBase
 from email import encoders
 from google.auth.transport.requests import Request
+from google.auth.exceptions import RefreshError
 from googleapiclient.http import MediaFileUpload
 from email.header import Header  # Importar Header
 
@@ -30,7 +31,12 @@ def autenticar():
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+            try:
+                creds.refresh(Request())
+            except RefreshError as error:
+                print(f"Error al refrescar el token: {error}")
+                os.remove(token_path)  # Delete the token file to force re-authentication
+                return autenticar()  # Retry authentication
         else:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
             auth_url, _ = flow.authorization_url(access_type='offline', prompt='consent')

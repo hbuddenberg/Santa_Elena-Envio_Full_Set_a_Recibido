@@ -8,9 +8,10 @@ from modules.email_sender import enviar_reciver, enviar_informe, enviar_vacio
 from modules.informe import genera_informe
 from modules.compresor import validar_archivos
 from datetime import datetime
+from time import sleep
 
 
-from pprint import pp 
+from pprint import pp
 
 CONFIG_GLOBAL = Configuracion_Yaml('src/configuration/configuracion.yaml')
 CONFIG_EXCEL  = Configuracion_Excel(CONFIG_GLOBAL.config.path.shared.config)
@@ -73,7 +74,7 @@ def registros(carpetas: dict):
         ruta = f"{carpetas['ruta']['en_proceso']}/{folder}"
         files, tamaño_total = validar_archivos(files, ruta, folder)
         estructura = estructurar(folder, files, CONFIG_EXCEL)
-        if tamaño_total < 1:
+        if tamaño_total <= 25:
             status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
         else:
             status = {'estado': False, 'descripcion': f'Archivos mayores a 25MB, tamaño total {tamaño_total} MB'}
@@ -86,15 +87,16 @@ def registros(carpetas: dict):
             'estado_correo': status
         })
         print("--------------------------------------------")
-    
+
     #with open('lista_ejecucion.txt', 'w') as file:
     #        file.write(str(lista_ejecucion))
-        
+
     if len(lista_ejecucion) > 0:
+        sleep(1)
         archivo_informe = generacion_informe(lista_ejecucion, carpetas['ruta']['en_proceso'])
         enviar_informe(CONFIG_GLOBAL, CONFIG_EXCEL, archivo_informe, lista_ejecucion, 'api')
         mover_todo(CONFIG_GLOBAL.config.path.shared.main)
-        
+
     return lista_ejecucion
 
 def ejecutar():
