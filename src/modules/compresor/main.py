@@ -24,6 +24,7 @@ def validar_archivos(archivos, ruta_base, nombre_comprimido, tamaño_maximo=25):
         return archivo_comprimido, tamaño_comprimido
     else:
         return archivos, tamaño_total
+    #return archivos, tamaño_total
 
 def main():
     asunto = 'FULL SET OF DOCS OE232400596 -OE232400597 -OE232400598 -OE232400599- MAERSK BULAN - TROPME (ETA 01-05-2024)'
