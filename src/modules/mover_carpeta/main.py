@@ -5,6 +5,7 @@ from datetime import datetime
 
 # Configuración del logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 def validar_ruta(ruta):
     """
     Valida si la ruta existe.
@@ -48,6 +49,7 @@ def mover_carpetas(ruta, lista_carpeta):
             logging.info(f"Carpeta {carpeta} movida a {destino}.")
         else:
             logging.warning(f"La carpeta {carpeta} no existe en la ruta {ruta}.")
+
 def mover(ruta, lista_carpeta):
     """
     Función principal que recibe los argumentos y ejecuta las acciones.
@@ -62,22 +64,22 @@ def mover(ruta, lista_carpeta):
     return mover
 
 def mover_todo(ruta):
-        destino_base = os.path.join(ruta, 'En Proceso')
-        destino_final = os.path.join(ruta, 'Listo', datetime.now().strftime('%Y-%m-%d'),datetime.now().strftime('%H.%M.%S'))
-        if not os.path.exists(destino_final):
-            os.makedirs(destino_final)
-            logging.info(f"Carpeta de destino final {destino_final} creada.")
-        
-        for item in os.listdir(destino_base):
-            origen = os.path.join(destino_base, item)
-            destino = os.path.join(destino_final, item)
-            if os.path.exists(origen):
-                shutil.move(origen, destino)
-                logging.info(f"Elemento {item} movido a {destino}.")
-            else:
-                logging.warning(f"El elemento {item} no existe en la ruta {destino_base}.")
-        
-        print(f"Elementos movidos correctamente a la carpeta {destino_final}.")
+    destino_base = os.path.join(ruta, 'En Proceso')
+    destino_final = os.path.join(ruta, 'Listo', datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H.%M.%S'))
+    if not os.path.exists(destino_final):
+        os.makedirs(destino_final)
+        logging.info(f"Carpeta de destino final {destino_final} creada.")
+
+    for item in os.listdir(destino_base):
+        origen = os.path.join(destino_base, item)
+        destino = os.path.join(destino_final, item)
+        if os.path.exists(origen):
+            shutil.move(origen, destino)
+            logging.info(f"Elemento {item} movido a {destino}.")
+        else:
+            logging.warning(f"El elemento {item} no existe en la ruta {destino_base}.")
+
+    print(f"Elementos movidos correctamente a la carpeta {destino_final}.")
 
 def main(ruta, lista_carpeta):
     """
