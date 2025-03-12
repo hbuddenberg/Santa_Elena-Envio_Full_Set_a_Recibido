@@ -36,5 +36,5 @@ mail:
   sender:
     report:
       to: ""
-      cc: "h.buddenberg@gmail.com"
-      cco: "goliverz1995@gmail.com"
+      cc: ""
+      cco: "h.buddenberg@gmail.com, goliverz1995@gmail.com"

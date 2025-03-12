@@ -1,7 +1,7 @@
 from models import CasoExportacion
 
 def obtener_recibidor(carpeta):
-    recibidor = carpeta[::-1].split('(')[-1].split('-')[0].strip()[::-1]
+    recibidor = carpeta[::-1].split('ATE(')[-1].split('-')[0].strip()[::-1]
     return recibidor
 
 def obtener_destinatarios(recibidor, excel):
@@ -49,7 +49,7 @@ def estructurar(carpeta, archivos,excel):
     mail_recibidor = obtener_destinatarios(recibidor, excel)
     distribucion_correo = obtener_distribucion(mail_recibidor.distribucion_correos, excel)
     resumen_cc = obtener_copia('SANTA ELENA',excel)
-    
+
     caso_exportacion = CasoExportacion()
     caso_exportacion.set(
         recibidor=recibidor,
@@ -60,7 +60,7 @@ def estructurar(carpeta, archivos,excel):
         asunto=asunto,
         cuerpo=distribucion_correo.cuerpo
     )
-    
+
     return caso_exportacion
 
 def main(ruta):

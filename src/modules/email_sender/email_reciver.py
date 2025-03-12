@@ -2,7 +2,7 @@ from .email_sender import enviar_correo_api, envio_correo_smtp
 from datetime import datetime
 import os
 
-def enviar_reciver(configuracion, ruta, files, estructura, tamaño_archivos, tipo='api'):
+def enviar_reciver(configuracion, ruta, files, estructura, tipo='api'):
     if tipo not in ['smtp', 'api']:
         raise ValueError("El tipo de envío debe ser 'smtp' o 'api'.")
 
