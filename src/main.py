@@ -76,7 +76,7 @@ def registros(carpetas: dict):
         estructura = estructurar(folder, files, CONFIG_EXCEL)
         #status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, tamaño_total,'api')
         if tamaño_total <= 25:
-            status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, tamaño_archivos,  'api')
+            status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura,  'api')
         else:
             #status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, tamaño_archivos,  'api')
             status = {'estado': False, 'descripcion': f'Archivos mayores a 25MB, tamaño total {tamaño_total} MB'}
