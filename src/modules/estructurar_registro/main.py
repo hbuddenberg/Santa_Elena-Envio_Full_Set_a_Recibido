@@ -1,7 +1,10 @@
 from models import CasoExportacion
 
 def obtener_recibidor(carpeta):
-    recibidor = carpeta[::-1].split('ATE(')[-1].split('-')[0].strip()[::-1]
+    try:
+        recibidor = carpeta[::-1].split('(')[-1].split('-')[0].strip()[::-1]
+    except:
+        recibidor = None
     return recibidor
 
 def obtener_destinatarios(recibidor, excel):
@@ -22,7 +25,11 @@ def obtener_distribucion(distribucion, excel):
             break
     if not distribucion_correo:
         print(f"recibidor {distribucion_correo} no encontrado en la configuración.")
-    return distribucion_correo
+    try:
+        return distribucion_correo
+    except Exception as e:
+        print(f"Error al obtener la distribución: {e}")
+        return []
 
 def obtener_copia(cc, excel):
     copia = []
@@ -44,21 +51,34 @@ def obtener_reporte(excel):
     return email_reporte
 
 def estructurar(carpeta, archivos,excel):
+    distribucion_correo = ''
+    pais = ''
+    lista_mail_recibidor = ''
+    cuerpo_distribucion_correo = ''
     asunto = carpeta
     recibidor = obtener_recibidor(carpeta)
     mail_recibidor = obtener_destinatarios(recibidor, excel)
-    distribucion_correo = obtener_distribucion(mail_recibidor.distribucion_correos, excel)
+    try:
+        distribucion_correo = obtener_distribucion(mail_recibidor.distribucion_correos, excel)
+        pais = distribucion_correo.pais
+        lista_mail_recibidor = mail_recibidor.lista_emails
+        cuerpo_distribucion_correo = distribucion_correo.cuerpo
+    except:
+        distribucion_correo = ''
+        pais = ''
+        lista_mail_recibidor = ''
+        cuerpo_distribucion_correo = ''
     resumen_cc = obtener_copia('SANTA ELENA',excel)
 
     caso_exportacion = CasoExportacion()
     caso_exportacion.set(
         recibidor=recibidor,
-        pais=distribucion_correo.pais,
-        emails_para=mail_recibidor.lista_emails,
+        pais=pais,
+        emails_para=lista_mail_recibidor,
         emails_copia=resumen_cc.lista_emails,
         adjuntos=archivos,
         asunto=asunto,
-        cuerpo=distribucion_correo.cuerpo
+        cuerpo=cuerpo_distribucion_correo
     )
 
     return caso_exportacion

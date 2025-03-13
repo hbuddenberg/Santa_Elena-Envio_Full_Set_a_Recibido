@@ -19,13 +19,13 @@ if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
 log_filename = os.path.join(log_dir, f"execution_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log")
-logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename=log_filename, level=print, format='%(asctime)s - %(levelname)s - %(message)s')
 
 CONFIG_GLOBAL = Configuracion_Yaml('src/configuration/configuracion.yaml')
 CONFIG_EXCEL  = Configuracion_Excel(CONFIG_GLOBAL.config.path.shared.config)
 
 def mover_carpetas_enproceso(ruta):
-    logging.info(f"Iniciando el proceso de mover carpetas en la ruta: {ruta}")
+    print(f"Iniciando el proceso de mover carpetas en la ruta: {ruta}")
     archivos = None
     carpetas = None
     lista_carpetas = buscar_carpeta(ruta)
@@ -35,13 +35,13 @@ def mover_carpetas_enproceso(ruta):
         lista_carpetas.remove('En Proceso')
     if 'Listo' in lista_carpetas:
         lista_carpetas.remove('Listo')
-    logging.info(f"Carpetas encontradas: {lista_carpetas}")
+    print(f"Carpetas encontradas: {lista_carpetas}")
     if len(lista_carpetas) > 0:
-        logging.info("Se encontraron carpetas en la ruta.")
+        print("Se encontraron carpetas en la ruta.")
         eliminar_carpetas(ruta)
         mover_carpetas = mover(ruta, lista_carpetas)
         if mover_carpetas:
-            logging.info("Carpetas movidas correctamente.")
+            print("Carpetas movidas correctamente.")
             carpetas = listar_archivos(f'{ruta}/En Proceso')
         else:
             logging.error("Error al mover las carpetas.")
@@ -52,12 +52,12 @@ def mover_carpetas_enproceso(ruta):
     return registros
 
 def listar_carpetas(registros: dict):
-    logging.info("Listando carpetas en proceso.")
+    print("Listando carpetas en proceso.")
     ruta = registros['ruta']['en_proceso']
     if registros != None:
         if registros['carpetas'] != None:
             carpetas = registros['carpetas']
-            logging.info(f"Carpetas encontradas: {carpetas}")
+            print(f"Carpetas encontradas: {carpetas}")
         else:
             logging.warning(f"No se encontró un archivo PDF Instructivo en la carpeta {ruta}")
     else:
@@ -69,7 +69,7 @@ def listar_carpetas(registros: dict):
     return ruta, carpetas
 
 def generacion_informe(registros, ruta):
-    logging.info("Generando informe.")
+    print("Generando informe.")
     nombre_archivo = f"Informe_Envio_Recibidor_{datetime.now().strftime('%Y-%m-%d_%H.%M.%S')}.xlsx"
     for registro in registros:
         archivo_informe = genera_informe(registro, ruta, nombre_archivo)
@@ -77,20 +77,25 @@ def generacion_informe(registros, ruta):
 
 def registros(carpetas: dict):
     lista_ejecucion = []
-    logging.info("Iniciando el proceso de registros.")
+    print("Iniciando el proceso de registros.")
     for folder, files in carpetas['carpetas'].items():
-        logging.info(f"Ejecutando: {folder}")
-        logging.info(f"Archivos: {files}")
+        print(f"Ejecutando: {folder}")
+        print(f"Archivos: {files}")
         ruta = f"{carpetas['ruta']['en_proceso']}/{folder}"
         files, tamaño_total = validar_archivos(files, ruta, folder)
-        logging.info(f"Tamaño total de los archivos: {tamaño_total} MB")
+        print(f"Tamaño total de los archivos: {tamaño_total} MB")
         estructura = estructurar(folder, files, CONFIG_EXCEL)
-        logging.info(f"Estructura: {estructura.to_dict()}")
-        if tamaño_total <= 25:
-            status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
+        print(f"Estructura: {estructura.to_dict()}")
+        if estructura.emails_para not in (None, ''):
+            if tamaño_total <= 25:
+                status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
+            else:
+                status = {'estado': False, 'descripcion': f'Archivos mayores a 25MB, tamaño total {tamaño_total} MB'}
+            print(f"Estado Correo: {status}")
         else:
-            status = {'estado': False, 'descripcion': f'Archivos mayores a 25MB, tamaño total {tamaño_total} MB'}
-        logging.info(f"Estado Correo: {status}")
+            print(f"Correo para: {estructura.emails_para}")
+            status = {'estado': False, 'descripcion': f'Correos de Recibidor o Recibidor no encontrado.'}
+
         lista_ejecucion.append({
             'carpeta': folder,
             'ruta': ruta,
@@ -108,7 +113,7 @@ def registros(carpetas: dict):
     return lista_ejecucion
 
 def ejecutar():
-    logging.info("Ejecutando el proceso principal.")
+    print("Ejecutando el proceso principal.")
     carpetas = mover_carpetas_enproceso(CONFIG_GLOBAL.config.path.shared.main)
     if carpetas != None:
         if len(carpetas['carpetas']) > 0:
@@ -119,7 +124,7 @@ def ejecutar():
         enviar_vacio(CONFIG_GLOBAL, CONFIG_EXCEL, 'api')
 
 def main():
-    logging.info("Iniciando el programa.")
+    print("Iniciando el programa.")
     ejecutar()
 
 if __name__ == "__main__":
