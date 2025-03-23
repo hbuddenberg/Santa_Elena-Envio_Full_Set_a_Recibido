@@ -1,8 +1,8 @@
 # Rutas
 path:
   local:
-    main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido"
-    #main: "D:/Dev/Santa_Elena-Envio_Full_Set_a_Recibido"
+    #main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido"
+    main: "D:/Dev/Santa_Elena-Envio_Full_Set_a_Recibido"
     source: "${path.local.main}/src"
     config: "${path.local.source}/configuracion"
     modules: "${path.local.source}/modules"
@@ -10,9 +10,9 @@ path:
     templates: "${path.local.source}/templates"
     logs: "${path.local.main}/logs"
   shared:
-    main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test"
+    #main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test"
     #main: "D:/Dev/Santa_Elena-Envio_Full_Set_a_Recibido/test"
-    #main: "G:/Mi unidad/Bot RPA/COMEX/Envio de archivos a recibidor"
+    main: "G:/Mi unidad/Bot RPA/COMEX/Envio de archivos a recibidor"
     config: "${path.shared.main}/Configuracion/Plantilla_de_Configuracion.xlsx"
     in_progress: "${path.shared.main}/En Proceso"
     done: "${path.shared.main}/Finalizados"
@@ -37,4 +37,4 @@ mail:
     report:
       to: ""
       cc: ""
-      cco: "hans.buddenberg@smart-bots.cl, h.buddenberg@gmail.com"
+      cco: "h.buddenberg@gmail.com"
