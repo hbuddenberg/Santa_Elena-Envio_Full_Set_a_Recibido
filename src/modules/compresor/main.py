@@ -17,14 +17,14 @@ def comprimir_archivos(archivos, archivo_7z, ruta_base):
 
 def validar_archivos(archivos, ruta_base, nombre_comprimido, tamaño_maximo=25):
     tamaño_total = obtener_tamaño_total([os.path.join(ruta_base, archivo) for archivo in archivos])
-    if tamaño_total > tamaño_maximo:
-        archivo_7z = f'{nombre_comprimido}.7z'
-        archivo_comprimido = [comprimir_archivos(archivos, archivo_7z, ruta_base)]
-        tamaño_comprimido = obtener_tamaño_total([os.path.join(ruta_base, archivo) for archivo in archivo_comprimido])
-        return archivo_comprimido, tamaño_comprimido
-    else:
-        return archivos, tamaño_total
-    #return archivos, tamaño_total
+    #if tamaño_total > tamaño_maximo:
+    #    archivo_7z = f'{nombre_comprimido}.7z'
+    #    archivo_comprimido = [comprimir_archivos(archivos, archivo_7z, ruta_base)]
+    #    tamaño_comprimido = obtener_tamaño_total([os.path.join(ruta_base, archivo) for archivo in archivo_comprimido])
+    #    return archivo_comprimido, tamaño_comprimido
+    #else:
+    #   return archivos, tamaño_total
+    return archivos, tamaño_total
 
 def main():
     asunto = 'FULL SET OF DOCS OE232400596 -OE232400597 -OE232400598 -OE232400599- MAERSK BULAN - TROPME (ETA 01-05-2024)'

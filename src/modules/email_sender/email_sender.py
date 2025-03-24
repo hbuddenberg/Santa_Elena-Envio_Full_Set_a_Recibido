@@ -16,6 +16,7 @@ from googleapiclient.http import MediaFileUpload
 from email.header import Header  # Importar Header
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/drive.file']
+#SCOPES=['https://www.googleapis.com/auth/gmail.readonly','https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/drive.metadata']
 CONFIG_PATH = 'src/configuration'
 
 def autenticar():
@@ -49,9 +50,13 @@ def autenticar():
     return creds
 
 def subir_archivo_a_drive(service, archivo):
-    file_metadata = {'name': os.path.basename(archivo)}
-    media = MediaFileUpload(archivo, resumable=True)
-    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    file = None
+    try:
+        file_metadata = {'name': os.path.basename(archivo)}
+        media = MediaFileUpload(archivo, resumable=True)
+        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    except Exception as e:
+        print(f"Error al subir el archivo {archivo} a Drive: {e}")
     return file.get('id')
 
 def obtener_enlace_drive(service, file_id):
@@ -207,3 +212,33 @@ def envio_correo_smtp(config_global, configuracion, destinatarios, asunto, cuerp
         descripcion = f"Error al enviar el correo: {e}"
         print(descripcion)
         return {'estado': False, 'descripcion': descripcion}
+    
+def main():
+    import sys
+    import os
+
+    #sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    #sys.path.append('D:/Dev/Santa_Elena-Envio_Full_Set_a_Recibido')
+    sys.path.append('/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido')
+
+    from src.modules.configuracion import Configuracion as Configuracion_Yaml
+    from src.modules.extraer_excel import Configuracion as Configuracion_Excel
+
+    CONFIG_GLOBAL = Configuracion_Yaml('src/configuration/configuracion.yaml')
+    CONFIG_EXCEL = Configuracion_Excel(CONFIG_GLOBAL.config.path.shared.config)
+
+    
+    configuracion = CONFIG_GLOBAL
+    destinatarios = ['h.buddenberg@gmail.com']
+    asunto = 'FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)'
+    cuerpo_html = '\n<!DOCTYPE html>\n<html lang="en">\n\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta http-equiv="X-UA-Compatible" content="ie=edge">\n  <title>Orden de Embarque</title>\n  <style>\n    body {\n      margin: 0;\n      padding: 0;\n      background-color: #f4f4f4;\n      font-family: Arial, sans-serif;\n    }\n\n    table {\n      border-spacing: 0;\n      width: 100%;\n    }\n\n    img {\n      display: block;\n      max-width: 100%;\n      height: auto;\n    }\n\n    .email-container {\n      max-width: 600px;\n      margin: 0 auto;\n      background-color: #ffffff;\n      border: 1px solid #e0e0e0;\n      border-radius: 8px;\n    }\n\n    .email-header {\n      padding: 10px 0;\n      text-align: center;\n      background-color: #ffffff;\n      border-bottom: 1px solid #e0e0e0;\n    }\n\n    .email-header img {\n      margin: 0 auto;\n      display: inline-block;\n      width: 100px;\n      height: auto;\n    }\n\n    .email-content {\n      padding: 20px;\n      color: #333333;\n      line-height: 1.6;\n    }\n\n    .email-footer {\n      text-align: center;\n      padding: 10px;\n      background-color: #f9fafb;\n      border-top: 1px solid #e0e0e0;\n      font-size: 11px;\n      color: #666666;\n    }\n  </style>\n</head>\n\n<body>\n  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">\n    <tr>\n      <td align="center">\n        <table class="email-container" cellpadding="0" cellspacing="0">\n          <!-- Header -->\n          <tr>\n            <td class="email-header">\n              <img src="https://smart-bots.cl/logo_santahelena.jpg" alt="Company Logo">\n            </td>\n          </tr>\n\n          <!-- Content -->\n          <tr>\n            <td class="email-content">\n              <p>Dear <br>\nPlease find attached The Following docs : <br>\n<br>\n- Bill of Lading (SWB) <br>\n- Invoice<br>\n - Certificate Of Origin <br>\n- Phytosanitary certificate <br>\n- Packing List <br>\n<br>\n<b>Docs are send only by Email, if you need docs phisically please advise, Thanks!<br>\n In case of questions, send email to comex@santaelena.com, comex2@santaelena.com, comexasistente@santaelena.com  <br>\n<br>\nBest Regards!! </b></p>\n            </td>\n          </tr>\n\n          <!-- Footer -->\n          <tr>\n            <td class="email-footer">\n                <p> &copy; 2025 Exportadora Santa Elena S.A. </p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n\n</html>\n'
+    archivos_adjuntos = ['/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/30mb.zip', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/FULL SET OE242500170 - CHARLES ISLAND - DIVINE.pdf', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/FULL SET OE242500171 - CHARLES ISLAND - DIVINE.pdf', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/FULL SET OE242500172 - CHARLES ISLAND - DIVINE.pdf', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025).7z', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/PACKING LIST OE242500170_CHARLES ISLAND_DIVINE.xls', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/PACKING LIST OE242500171_CHARLES ISLAND_DIVINE.xls', '/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test/En Proceso/FULL SET OF DOCS REF 242500170 - 242500171 -242500172 -CHARLES ISLAND - DIVINE (ETA 21-03-2025)/PACKING LIST OE242500172_CHARLES ISLAND_DIVINE.xls']
+    cc=None
+    bcc=None
+    
+    status = enviar_correo_api(configuracion, destinatarios, asunto, cuerpo_html, archivos_adjuntos, cc, bcc)
+    print(status)
+
+
+if __name__ == "__main__":
+    main()

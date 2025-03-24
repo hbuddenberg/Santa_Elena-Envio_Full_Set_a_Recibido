@@ -90,6 +90,7 @@ def registros(carpetas: dict):
             if tamaño_total <= 25:
                 status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
             else:
+                status = enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
                 status = {'estado': False, 'descripcion': f'Archivos mayores a 25MB, tamaño total {tamaño_total} MB'}
             print(f"Estado Correo: {status}")
         else:

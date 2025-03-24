@@ -1,4 +1,5 @@
-from models import CasoExportacion
+#from models import CasoExportacion
+from src.models import CasoExportacion
 
 def obtener_recibidor(carpeta):
     try:

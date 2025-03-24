@@ -1,6 +1,7 @@
 import os
 import pandas as pd
-from models import load_config_excel as load_config
+#from models import load_config_excel as load_config
+from src.models import load_config_excel as load_config
 
 class Configuracion:
 

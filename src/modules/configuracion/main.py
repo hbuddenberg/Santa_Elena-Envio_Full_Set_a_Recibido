@@ -1,4 +1,5 @@
-from models import load_config_yaml as load_config
+#from models import load_config_yaml as load_config
+from src.models import load_config_yaml as load_config
 import pprint
 
 class Configuracion:
