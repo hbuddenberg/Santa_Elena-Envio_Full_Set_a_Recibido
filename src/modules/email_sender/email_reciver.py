@@ -1,29 +1,49 @@
-from .email_sender import enviar_correo_api, envio_correo_smtp
-from datetime import datetime
 import os
 
-def enviar_reciver(configuracion, ruta, files, estructura, tipo='api'):
-    if tipo not in ['smtp', 'api']:
+from .email_sender import enviar_correo_api, envio_correo_smtp
+
+
+def enviar_reciver(configuracion, ruta, files, estructura, tipo="api"):
+    if tipo not in ["smtp", "api"]:
         raise ValueError("El tipo de envío debe ser 'smtp' o 'api'.")
 
-    with open(configuracion.config.mail.template.receiver, 'r') as file:
+    with open(configuracion.config.mail.template.receiver, "r") as file:
         cuerpo_html = file.read()
 
-    cuerpo_html = str(cuerpo_html).replace('{cuerpo}', ''.join(estructura.cuerpo))
+    cuerpo_html = str(cuerpo_html).replace("{cuerpo}", "".join(estructura.cuerpo))
 
     archivos = [os.path.join(ruta, file) for file in files]
 
-    destinatarios = [email.strip() for email in estructura.emails_para.replace(';', ',').split(',')]
-    copia = [email.strip() for email in estructura.emails_copia.replace(';', ',').split(',')]
-    oculto = [email.strip() for email in configuracion.config.mail.sender.report.cco.replace(';', ',').split(',')]
+    destinatarios = [email.strip() for email in estructura.emails_para.replace(";", ",").split(",")]
+    copia = [email.strip() for email in estructura.emails_copia.replace(";", ",").split(",")]
+    oculto = [email.strip() for email in configuracion.config.mail.sender.report.cco.replace(";", ",").split(",")]
 
-    if tipo == 'api':
-        status = enviar_correo_api(configuracion, destinatarios, estructura.asunto, cuerpo_html, archivos, copia, oculto)
+    if tipo == "api":
+        status = enviar_correo_api(
+            configuracion,
+            destinatarios,
+            estructura.asunto,
+            cuerpo_html,
+            archivos,
+            copia,
+            oculto,
+        )
     else:
-        status = envio_correo_smtp(configuracion, configuracion.config.mail.config.smtp, destinatarios, estructura.asunto, cuerpo_html, archivos, copia, oculto)
+        status = envio_correo_smtp(
+            configuracion,
+            configuracion.config.mail.config.smtp,
+            destinatarios,
+            estructura.asunto,
+            cuerpo_html,
+            archivos,
+            copia,
+            oculto,
+        )
 
     return status
-'''
+
+
+"""
 import sys
 import os
 
@@ -44,4 +64,4 @@ files = ['FULL SET OE232400596- MAERSK BULAN - TROPME-1.pdf', 'FULL SET OE232400
 estructura = estructurar(folder, files, CONFIG_EXCEL)
 
 enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
-'''
+"""

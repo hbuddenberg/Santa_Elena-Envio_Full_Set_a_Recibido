@@ -1,5 +1,14 @@
 class CasoExportacion:
-    def __init__(self, recibidor='', pais='', emails_para='', emails_copia='', adjuntos='', asunto='', cuerpo=''):
+    def __init__(
+        self,
+        recibidor="",
+        pais="",
+        emails_para="",
+        emails_copia="",
+        adjuntos="",
+        asunto="",
+        cuerpo="",
+    ):
         self.recibidor = recibidor
         self.pais = pais
         self.emails_para = emails_para
@@ -9,22 +18,33 @@ class CasoExportacion:
         self.cuerpo = cuerpo
 
     def __repr__(self):
-        return (f"CasoExportacion(recibidor={self.recibidor}, pais={self.pais}, emails_para={self.emails_para}, "
-                f"emails_copia={self.emails_copia}, adjuntos={self.adjuntos}, "
-                f"asunto={self.asunto}, cuerpo={self.cuerpo})")
+        return (
+            f"CasoExportacion(recibidor={self.recibidor}, pais={self.pais}, emails_para={self.emails_para}, "
+            f"emails_copia={self.emails_copia}, adjuntos={self.adjuntos}, "
+            f"asunto={self.asunto}, cuerpo={self.cuerpo})"
+        )
 
     def to_dict(self):
         return {
-            'recibidor': self.recibidor,
-            'pais': self.pais,
-            'emails_para': self.emails_para,
-            'emails_copia': self.emails_copia,
-            'adjuntos': self.adjuntos,
-            'asunto': self.asunto,
-            'cuerpo': self.cuerpo
+            "recibidor": self.recibidor,
+            "pais": self.pais,
+            "emails_para": self.emails_para,
+            "emails_copia": self.emails_copia,
+            "adjuntos": self.adjuntos,
+            "asunto": self.asunto,
+            "cuerpo": self.cuerpo,
         }
 
-    def set(self, recibidor=None, pais=None, emails_para=None, emails_copia=None, adjuntos=None, asunto=None, cuerpo=None):
+    def set(
+        self,
+        recibidor=None,
+        pais=None,
+        emails_para=None,
+        emails_copia=None,
+        adjuntos=None,
+        asunto=None,
+        cuerpo=None,
+    ):
         if recibidor is not None:
             self.recibidor = recibidor
         if pais is not None:
@@ -40,7 +60,8 @@ class CasoExportacion:
         if cuerpo is not None:
             self.cuerpo = cuerpo
 
-'''
+
+"""
 # Ejemplo de uso
 caso = CasoExportacion(
     recibidor='Recibidor',
@@ -59,4 +80,4 @@ print(caso.to_dict())
 caso.set(recibidor='Nuevo Recibidor', pais='Francia', emails_para='nuevo@example.com', emails_copia='nuevo_cc@example.com', adjuntos='nuevo_documento.pdf', asunto='Nuevo Asunto', cuerpo='Nuevo Cuerpo')
 print(caso)
 print(caso.to_dict())
-'''
+"""

@@ -1,3 +1,3 @@
 from .main import estructurar
 
-__all__ = ['estructurar']
+__all__ = ["estructurar"]

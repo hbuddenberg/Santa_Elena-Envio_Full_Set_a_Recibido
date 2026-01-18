@@ -2,20 +2,20 @@
 path:
   local:
     #main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido"
-    main: "D:/Dev/Santa_Elena-Envio_Full_Set_a_Recibido"
+    main: "/Volumes/Resources/Developments/Projects/SmartBots/Santa_Elena/Santa_Elena-Envio_Full_Set_a_Recibido"
     source: "${path.local.main}/src"
-    config: "${path.local.source}/configuracion"
+    config: "${path.local.source}/configuration"
     modules: "${path.local.source}/modules"
     models: "${path.local.source}/models"
     templates: "${path.local.source}/templates"
     logs: "${path.local.main}/logs"
-  shared:
+  drive:
     #main: "/Volumes/Resources/Development/SmartBots/Santa_Elena-Envio_Full_Set_a_Recibido/test"
     #main: "D:/Dev/Santa_Elena-Envio_Full_Set_a_Recibido/test"
-    main: "G:/Mi unidad/Bot RPA/COMEX/Envio de archivos a recibidor"
-    config: "${path.shared.main}/Configuracion/Plantilla_de_Configuracion.xlsx"
-    in_progress: "${path.shared.main}/En Proceso"
-    done: "${path.shared.main}/Finalizados"
+    #main: "G:/Mi unidad/Bot RPA/COMEX/Envio de archivos a recibidor"
+    root_path: "Santa Elena/COMEX/[LISTO] Envío full set a recibidor"
+    in_progress: "En Proceso"
+    done: "Finalizados"
 
 # Correo
 mail:
@@ -38,3 +38,7 @@ mail:
       to: ""
       cc: ""
       cco: "h.buddenberg@gmail.com"
+
+google.api:
+  cuenta: facturasproveedores@santaelena.com
+  clave: Fe*.2020

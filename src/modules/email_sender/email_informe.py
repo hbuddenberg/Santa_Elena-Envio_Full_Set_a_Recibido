@@ -1,33 +1,53 @@
-from .email_sender import enviar_correo_api, envio_correo_smtp
 from datetime import datetime
-import os
 
-def enviar_informe(configuracion, excel, archivo_informe, lista_ejecucion, tipo='api'):
-    if tipo not in ['smtp', 'api']:
+from .email_sender import enviar_correo_api, envio_correo_smtp
+
+
+def enviar_informe(configuracion, excel, archivo_informe, lista_ejecucion, tipo="api"):
+    if tipo not in ["smtp", "api"]:
         raise ValueError("El tipo de envío debe ser 'smtp' o 'api'.")
 
-    asuntos_exitosos = [ejecucion['carpeta'] for ejecucion in lista_ejecucion if ejecucion['estado_correo']['estado']]
+    asuntos_exitosos = [ejecucion["carpeta"] for ejecucion in lista_ejecucion if ejecucion["estado_correo"]["estado"]]
 
     asuntos_exitosos = [f"<li>{ejecucion}</li>" for ejecucion in asuntos_exitosos]
 
-    asunto = f'Informe de ejecucion Envio Correo a Recibidores - {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    asunto = f"Informe de ejecucion Envio Correo a Recibidores - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
-    with open(configuracion.config.mail.template.report, 'r') as file:
+    with open(configuracion.config.mail.template.report, "r") as file:
         cuerpo_html = file.read()
 
-    cuerpo_html = str(cuerpo_html).replace('{asuntos_exitosos}', ''.join(asuntos_exitosos))
+    cuerpo_html = str(cuerpo_html).replace("{asuntos_exitosos}", "".join(asuntos_exitosos))
 
-    destinatarios = [email.strip() for email in excel.config.email_reporte[0].lista_emails.replace(';', ',').split(',')]
-    copia = [email.strip() for email in configuracion.config.mail.sender.report.cc.replace(';', ',').split(',')]
-    oculto = [email.strip() for email in configuracion.config.mail.sender.report.cco.replace(';', ',').split(',')]
+    destinatarios = [email.strip() for email in excel.config.email_reporte[0].lista_emails.replace(";", ",").split(",")]
+    copia = [email.strip() for email in configuracion.config.mail.sender.report.cc.replace(";", ",").split(",")]
+    oculto = [email.strip() for email in configuracion.config.mail.sender.report.cco.replace(";", ",").split(",")]
 
-    if tipo == 'api':
-        status = enviar_correo_api(configuracion, destinatarios, asunto, cuerpo_html, [archivo_informe], copia, oculto)
+    if tipo == "api":
+        status = enviar_correo_api(
+            configuracion,
+            destinatarios,
+            asunto,
+            cuerpo_html,
+            [archivo_informe],
+            copia,
+            oculto,
+        )
     else:
-        status = envio_correo_smtp(configuracion, configuracion.config.mail.config.smtp, destinatarios, asunto, cuerpo_html, [archivo_informe], copia, oculto)
-    
+        status = envio_correo_smtp(
+            configuracion,
+            configuracion.config.mail.config.smtp,
+            destinatarios,
+            asunto,
+            cuerpo_html,
+            [archivo_informe],
+            copia,
+            oculto,
+        )
+
     return status
-'''
+
+
+"""
 import sys
 import os
 
@@ -48,4 +68,4 @@ files = ['FULL SET OE232400007- MSC CASSANDRE- DIVINE.pdf', 'PACKING LIST OE2324
 estructura = estructurar(folder, files, CONFIG_EXCEL)
 
 enviar_reciver(CONFIG_GLOBAL, ruta, files, estructura, 'api')
-'''
+"""
